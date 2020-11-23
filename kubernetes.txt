@@ -2,12 +2,7 @@ kubeadm join 172.31.47.241:6443 --token kevrux.8n7dgu2di0mtpono \
     --discovery-token-ca-cert-hash sha256:a7218f9f0fa21997cd73b67e132e9b23ce617e2a0bf7927a69c3a26b4ec8b1bb
 
 
-sudo kubectl run my-app --image=andalike/node-web-app --port=8080
-sudo kubectl expose deployment my-app --type=LoadBalancer --port=8080 --target-port=8080
-sudo kubectl get svc
-
-Run the command: sudo kubectl get svc
-Chec the Port(s) and the port should be mapped to  a port, which is the port the service is mapped to
-
-<<Optional For New Deployment>>
-kubectl set image deployment/my-app  my-app=andalike/node-web-app
+sudo docker run -d --restart=always -e DOMAIN=cluster --name appnodejs8080 -p 8080:8080 andalike/node-web-app
+kubectl create deployment --image=andalike/node-web-app appnodejs8080
+kubectl set env deployment/appnodejs8080  DOMAIN=cluster
+kubectl expose deployment appnodejs8080 --port=80 --name=appnodejs8080
